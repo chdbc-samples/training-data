@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BasicDataOperationUsingList",
+            "request": "launch",
+            "mainClass": "BasicDataOperationUsingList",
+            "projectName": "training-data_897c1136"
+        },
+        {
+            "type": "java",
             "name": "BasicDataOperation",
             "request": "launch",
             "mainClass": "${file}",
