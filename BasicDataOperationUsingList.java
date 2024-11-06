@@ -1,64 +1,161 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+// /**
+//  * Клас BasicDataOperationUsingList надає методи для виконання основних операцiй з даними типу String.
+//  * 
+//  * <p>Цей клас зчитує данi з файлу "String.data", сортує їх та виконує пошук значення в масивi та списку.</p>
+//  */
 public class BasicDataOperationUsingList {
-    private static final String PATH_TO_DATA_FILE = "list/String.data";
-    private static final String TARGET_STRING = "Parks filled with joy";
+    static final String PATH_TO_DATA_FILE = "list/String.data";
 
-    public static void main(String[] args) {
-        // Масив і ArrayList для збереження даних
-        ArrayList<String> arrayList = new ArrayList<>();
-        String[] array = null;
+    String stringValueToSearch;
+    String[] stringArray;
+    List<String> stringList;
 
-        // Зчитування даних з файлу і заповнення масиву та ArrayList
-        try (BufferedReader reader = new BufferedReader(new FileReader(PATH_TO_DATA_FILE))) {
-            ArrayList<String> tempList = new ArrayList<>();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                tempList.add(line);
-            }
-            array = tempList.toArray(new String[0]);
-            arrayList.addAll(tempList);
-        } catch (IOException e) {
-            System.err.println("Помилка при зчитуванні файлу: " + e.getMessage());
-            return;
+    public static void main(String[] args) {  
+        BasicDataOperationUsingList basicDataOperationUsingList = new BasicDataOperationUsingList(args);
+        basicDataOperationUsingList.doDataOperation();
+    }
+
+    // /**
+    //  * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
+    //  * 
+    //  * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
+    //  */
+    BasicDataOperationUsingList(String[] args) {
+        if (args.length == 0) {
+            throw new RuntimeException("Вiдсутнє значення для пошуку");
         }
 
-        // Пошук у масиві
+        stringValueToSearch = args[0];
+        stringArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
+        stringList = new ArrayList<>(Arrays.asList(stringArray));
+    }
+
+    /**
+     * Виконує основнi операцiї з даними.
+     */
+    void doDataOperation() {
+        // операцiї з масивом String
+        searchArray();
+        sortArray();
+        searchArray();
+
+        // операцiї з ArrayList
+        searchList();
+        sortList();
+        searchList();
+
+        // записати вiдсортований масив у файл
+        Utils.writeArrayToFile(stringArray, PATH_TO_DATA_FILE + ".sorted");
+    }
+
+    // /**
+    //  * Сортує масив об'єктiв String та вимiрює час сортування.
+    //  */
+    void sortArray() {
         long startTime = System.nanoTime();
-        boolean foundInArray = Arrays.asList(array).contains(TARGET_STRING);
-        long durationArraySearch = System.nanoTime() - startTime;
+        Arrays.sort(stringArray);
+        Utils.printOperationDuration(startTime, "сортування масиву String");
+    }
 
-        // Пошук у ArrayList
-        startTime = System.nanoTime();
-        boolean foundInList = arrayList.contains(TARGET_STRING);
-        long durationListSearch = System.nanoTime() - startTime;
+    // /**
+    //  * Метод для пошуку значення в масивi String.
+    //  */
+    void searchArray() {
+        long startTime = System.nanoTime();
+        int index = Arrays.asList(stringArray).indexOf(stringValueToSearch);
+        Utils.printOperationDuration(startTime, "пошук в масивi String");
 
-        // Сортування масиву
-        startTime = System.nanoTime();
-        Arrays.sort(array);
-        long durationArraySort = System.nanoTime() - startTime;
+        if (index >= 0) {
+            System.out.println("Значення '" + stringValueToSearch + "' знайдено в масивi за iндексом: " + index);
+        } else {
+            System.out.println("Значення '" + stringValueToSearch + "' в масивi не знайдено.");
+        }
+    }
 
-        // Сортування ArrayList
-        startTime = System.nanoTime();
-        Collections.sort(arrayList);
-        long durationListSort = System.nanoTime() - startTime;
+    // /**
+    //  * Шукає задане значення в ArrayList.
+    //  */
+    void searchList() {
+        long startTime = System.nanoTime();
+        int index = stringList.indexOf(stringValueToSearch);
+        Utils.printOperationDuration(startTime, "пошук в ArrayList String");        
 
-        // Виведення результатів
-        System.out.println("Пошук значення \"" + TARGET_STRING + "\" в масиві:");
-        System.out.println("    Знайдено: " + foundInArray + ", Час виконання: " + durationArraySearch + " наносекунд");
+        if (index >= 0) {
+            System.out.println("Значення '" + stringValueToSearch + "' знайдено в ArrayList за iндексом: " + index);
+        } else {
+            System.out.println("Значення '" + stringValueToSearch + "' в ArrayList не знайдено.");
+        }
+    }
 
-        System.out.println("Пошук значення \"" + TARGET_STRING + "\" в ArrayList:");
-        System.out.println("    Знайдено: " + foundInList + ", Час виконання: " + durationListSearch + " наносекунд");
+    // /**
+    //  * Сортує ArrayList об'єктiв String та вимiрює час сортування.
+    //  */
+    void sortList() {
+        long startTime = System.nanoTime();
+        Collections.sort(stringList);
+        Utils.printOperationDuration(startTime, "сортування ArrayList String");
+    }
+}
 
-        System.out.println("Сортування масиву: " + durationArraySort + " наносекунд");
-        System.out.println("Сортування ArrayList: " + durationListSort + " наносекунд");
+// /**
+//  * Клас Utils мiститить допомiжнi методи для роботи з даними типу String.
+//  */
+class Utils {
+    // /**
+    //  * Виводить час виконання операцiї в наносекундах.
+    //  * 
+    //  * @param startTime Час початку операцiї в наносекундах.
+    //  * @param operationName Назва операцiї.
+    //  */
+    static void printOperationDuration(long startTime, String operationName) {
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("\n>>>>>>>>> Час виконання операцiї '" + operationName + "': " + duration + " наносекунд");
+    }
 
-        // Додатково: збереження відсортованих даних у файл (опціонально)
-        // Можна додати код для запису array і arrayList в окремі файли, якщо потрібно.
+    // /**
+    //  * Зчитує масив об'єктiв String з файлу.
+    //  * 
+    //  * @param pathToFile Шлях до файлу з даними.
+    //  * @return Масив об'єктiв String.
+    //  */
+    static String[] readArrayFromFile(String pathToFile) {
+        ArrayList<String> tempList = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                tempList.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tempList.toArray(new String[0]);
+    }
+
+    // /**
+    //  * Записує масив об'єктiв String у файл.
+    //  * 
+    //  * @param stringArray Масив об'єктiв String.
+    //  * @param pathToFile Шлях до файлу для запису.
+    //  */
+    static void writeArrayToFile(String[] stringArray, String pathToFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
+            for (String line : stringArray) {
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
