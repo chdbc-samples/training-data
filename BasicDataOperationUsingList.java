@@ -57,8 +57,5 @@ public class BasicDataOperationUsingList {
 
         System.out.println("Сортування масиву: " + durationArraySort + " наносекунд");
         System.out.println("Сортування ArrayList: " + durationListSort + " наносекунд");
-
-        // Додатково: збереження відсортованих даних у файл (опціонально)
-        // Можна додати код для запису array і arrayList в окремі файли, якщо потрібно.
     }
 }
