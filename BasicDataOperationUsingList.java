@@ -8,11 +8,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-// /**
-//  * Клас BasicDataOperationUsingList надає методи для виконання основних операцiй з даними типу String.
-//  * 
-//  * <p>Цей клас зчитує данi з файлу "String.data", сортує їх та виконує пошук значення в масивi та списку.</p>
-//  */
+/**
+ * Клас BasicDataOperationUsingList надає методи для виконання основних операцiй з даними типу String.
+ * 
+ * <p>Цей клас зчитує данi з файлу "String.data", сортує їх та виконує пошук значення в масивi та списку.</p>
+ */
 public class BasicDataOperationUsingList {
     static final String PATH_TO_DATA_FILE = "list/String.data";
 
@@ -58,18 +58,18 @@ public class BasicDataOperationUsingList {
         Utils.writeArrayToFile(stringArray, PATH_TO_DATA_FILE + ".sorted");
     }
 
-    // /**
-    //  * Сортує масив об'єктiв String та вимiрює час сортування.
-    //  */
+    /**
+     * Сортує масив об'єктiв String та вимiрює час сортування.
+     */
     void sortArray() {
         long startTime = System.nanoTime();
         Arrays.sort(stringArray);
         Utils.printOperationDuration(startTime, "сортування масиву String");
     }
 
-    // /**
-    //  * Метод для пошуку значення в масивi String.
-    //  */
+    /**
+     * Метод для пошуку значення в масивi String.
+     */
     void searchArray() {
         long startTime = System.nanoTime();
         int index = Arrays.asList(stringArray).indexOf(stringValueToSearch);
@@ -82,9 +82,9 @@ public class BasicDataOperationUsingList {
         }
     }
 
-    // /**
-    //  * Шукає задане значення в ArrayList.
-    //  */
+    /**
+     * Шукає задане значення в ArrayList.
+     */
     void searchList() {
         long startTime = System.nanoTime();
         int index = stringList.indexOf(stringValueToSearch);
@@ -97,9 +97,9 @@ public class BasicDataOperationUsingList {
         }
     }
 
-    // /**
-    //  * Сортує ArrayList об'єктiв String та вимiрює час сортування.
-    //  */
+    /**
+     * Сортує ArrayList об'єктiв String та вимiрює час сортування.
+     */
     void sortList() {
         long startTime = System.nanoTime();
         Collections.sort(stringList);
@@ -107,9 +107,9 @@ public class BasicDataOperationUsingList {
     }
 }
 
-// /**
-//  * Клас Utils мiститить допомiжнi методи для роботи з даними типу String.
-//  */
+/**
+ * Клас Utils мiститить допомiжнi методи для роботи з даними типу String.
+ */
 class Utils {
     // /**
     //  * Виводить час виконання операцiї в наносекундах.
