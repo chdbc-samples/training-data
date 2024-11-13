@@ -25,11 +25,11 @@ public class BasicDataOperationUsingList {
         basicDataOperationUsingList.doDataOperation();
     }
 
-    // /**
-    //  * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
-    //  * 
-    //  * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
-    //  */
+    /**
+     * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
+     * 
+     * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
+     */
     BasicDataOperationUsingList(String[] args) {
         if (args.length == 0) {
             throw new RuntimeException("Вiдсутнє значення для пошуку");
@@ -44,15 +44,22 @@ public class BasicDataOperationUsingList {
      * Виконує основнi операцiї з даними.
      */
     void doDataOperation() {
-        // операцiї з масивом String
         searchArray();
+        findMinAndMaxInArray();
+
         sortArray();
+        
         searchArray();
+        findMinAndMaxInArray();
 
         // операцiї з ArrayList
         searchList();
+        findMinAndMaxInList();
+
         sortList();
-        searchList();
+
+        findMinAndMaxInList();
+
 
         // записати вiдсортований масив у файл
         Utils.writeArrayToFile(stringArray, PATH_TO_DATA_FILE + ".sorted");
@@ -83,6 +90,35 @@ public class BasicDataOperationUsingList {
     }
 
     /**
+     * Знаходить мiнiмальне та максимальне значення в масивi String.
+     */
+    void findMinAndMaxInArray() {
+        if (stringArray == null || stringArray.length == 0) {
+            System.out.println("Масив порожнiй або не iнiцiалiзований.");
+            return;
+        }
+
+        long startTime = System.nanoTime();
+
+        String min = stringArray[0];
+        String max = stringArray[0];
+
+        for (String str : stringArray) {
+            if (str.compareTo(min) < 0) {
+                min = str;
+            }
+            if (str.compareTo(max) > 0) {
+                max = str;
+            }
+        }
+
+        Utils.printOperationDuration(startTime, "пошук мiнiмального i максимального значення в масивi");
+
+        System.out.println("Мiнiмальне значення в масивi: " + min);
+        System.out.println("Максимальне значення в масивi: " + max);
+    }
+
+    /**
      * Шукає задане значення в ArrayList.
      */
     void searchList() {
@@ -95,6 +131,26 @@ public class BasicDataOperationUsingList {
         } else {
             System.out.println("Значення '" + stringValueToSearch + "' в ArrayList не знайдено.");
         }
+    }
+
+ /**
+     * Знаходить мiнiмальне та максимальне значення в ArrayList дати i часу.
+     */
+    void findMinAndMaxInList() {
+        if (stringList == null || stringList.isEmpty()) {
+            System.out.println("ArrayList порожнiй або не iнiцiалiзований.");
+            return;
+        }
+
+        long startTime = System.nanoTime();
+
+        String min = Collections.min(stringList);
+        String max = Collections.max(stringList);
+
+        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної  в ArrayList");
+
+        System.out.println("Мiнiмальне значення в ArrayList: " + min);
+        System.out.println("Максимальне значення в ArrayList: " + max);
     }
 
     /**
@@ -111,24 +167,24 @@ public class BasicDataOperationUsingList {
  * Клас Utils мiститить допомiжнi методи для роботи з даними типу String.
  */
 class Utils {
-    // /**
-    //  * Виводить час виконання операцiї в наносекундах.
-    //  * 
-    //  * @param startTime Час початку операцiї в наносекундах.
-    //  * @param operationName Назва операцiї.
-    //  */
+    /**
+     * Виводить час виконання операцiї в наносекундах.
+     * 
+     * @param startTime Час початку операцiї в наносекундах.
+     * @param operationName Назва операцiї.
+     */
     static void printOperationDuration(long startTime, String operationName) {
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         System.out.println("\n>>>>>>>>> Час виконання операцiї '" + operationName + "': " + duration + " наносекунд");
     }
 
-    // /**
-    //  * Зчитує масив об'єктiв String з файлу.
-    //  * 
-    //  * @param pathToFile Шлях до файлу з даними.
-    //  * @return Масив об'єктiв String.
-    //  */
+    /**
+     * Зчитує масив об'єктiв String з файлу.
+     * 
+     * @param pathToFile Шлях до файлу з даними.
+     * @return Масив об'єктiв String.
+     */
     static String[] readArrayFromFile(String pathToFile) {
         ArrayList<String> tempList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
@@ -142,12 +198,12 @@ class Utils {
         return tempList.toArray(new String[0]);
     }
 
-    // /**
-    //  * Записує масив об'єктiв String у файл.
-    //  * 
-    //  * @param stringArray Масив об'єктiв String.
-    //  * @param pathToFile Шлях до файлу для запису.
-    //  */
+    /**
+     * Записує масив об'єктiв String у файл.
+     * 
+     * @param stringArray Масив об'єктiв String.
+     * @param pathToFile Шлях до файлу для запису.
+     */
     static void writeArrayToFile(String[] stringArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
             for (String line : stringArray) {
