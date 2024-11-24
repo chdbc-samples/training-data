@@ -20,46 +20,45 @@ public class BasicDataOperationUsingList {
     String[] stringArray;
     List<String> stringList;
 
-    public static void main(String[] args) {  
+    public static void main(String[] args) {
         BasicDataOperationUsingList basicDataOperationUsingList = new BasicDataOperationUsingList(args);
         basicDataOperationUsingList.doDataOperation();
     }
 
     /**
      * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
-     * 
+     *
      * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
      */
     BasicDataOperationUsingList(String[] args) {
         if (args.length == 0) {
-            throw new RuntimeException("Вiдсутнє значення для пошуку");
+            System.out.println("Вiдсутнє значення для пошуку. Використано значення за замовчуванням.");
+            stringValueToSearch = "Parks filled with joy";
+        } else {
+            stringValueToSearch = args[0];
         }
-
-        stringValueToSearch = args[0];
+    
         stringArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
         stringList = new ArrayList<>(Arrays.asList(stringArray));
     }
+    
 
     /**
      * Виконує основнi операцiї з даними.
      */
     void doDataOperation() {
         searchArray();
-        findMinAndMaxInArray();
-
+        findMinAndMaxInSet();
         sortArray();
-        
         searchArray();
-        findMinAndMaxInArray();
+        findMinAndMaxInSet();
 
         // операцiї з ArrayList
         searchList();
         findMinAndMaxInList();
-
         sortList();
-
         findMinAndMaxInList();
-
+        compareArrayAndSet();
 
         // записати вiдсортований масив у файл
         Utils.writeArrayToFile(stringArray, PATH_TO_DATA_FILE + ".sorted");
@@ -70,71 +69,76 @@ public class BasicDataOperationUsingList {
      */
     void sortArray() {
         long startTime = System.nanoTime();
-        Arrays.sort(stringArray);
+        stringArray = Arrays.stream(stringArray)
+                            .sorted()
+                            .toArray(String[]::new);
         Utils.printOperationDuration(startTime, "сортування масиву String");
     }
-
+    
     /**
      * Метод для пошуку значення в масивi String.
      */
     void searchArray() {
         long startTime = System.nanoTime();
-        int index = Arrays.asList(stringArray).indexOf(stringValueToSearch);
+        boolean found = Arrays.stream(stringArray)
+                            .anyMatch(value -> value.equals(stringValueToSearch));
+        
         Utils.printOperationDuration(startTime, "пошук в масивi String");
-
-        if (index >= 0) {
-            System.out.println("Значення '" + stringValueToSearch + "' знайдено в масивi за iндексом: " + index);
-        } else {
-            System.out.println("Значення '" + stringValueToSearch + "' в масивi не знайдено.");
-        }
+    
+        System.out.println("Значення '" + stringValueToSearch + "'" +
+                        (found ? " знайдено" : " не знайдено") + " в масиві.");
     }
+    
 
     /**
      * Знаходить мiнiмальне та максимальне значення в масивi String.
      */
-    void findMinAndMaxInArray() {
-        if (stringArray == null || stringArray.length == 0) {
-            System.out.println("Масив порожнiй або не iнiцiалiзований.");
+    void findMinAndMaxInSet() {
+        if (stringList == null || stringList.isEmpty()) {
+            System.out.println("Множина порожня або не ініціалізована.");
             return;
         }
-
+    
         long startTime = System.nanoTime();
-
-        String min = stringArray[0];
-        String max = stringArray[0];
-
-        for (String str : stringArray) {
-            if (str.compareTo(min) < 0) {
-                min = str;
-            }
-            if (str.compareTo(max) > 0) {
-                max = str;
-            }
-        }
-
-        Utils.printOperationDuration(startTime, "пошук мiнiмального i максимального значення в масивi");
-
-        System.out.println("Мiнiмальне значення в масивi: " + min);
-        System.out.println("Максимальне значення в масивi: " + max);
+    
+        String min = stringList.stream()
+                            .min(String::compareTo)
+                            .orElse("Мінімум не знайдено");
+    
+        String max = stringList.stream()
+                            .max(String::compareTo)
+                            .orElse("Максимум не знайдено");
+    
+        Utils.printOperationDuration(startTime, "пошук мінімального і максимального значення в множині");
+    
+        System.out.println("Мінімальне значення в множині: " + min);
+        System.out.println("Максимальне значення в множині: " + max);
     }
-
+    
+    
     /**
      * Шукає задане значення в ArrayList.
      */
     void searchList() {
         long startTime = System.nanoTime();
-        int index = stringList.indexOf(stringValueToSearch);
-        Utils.printOperationDuration(startTime, "пошук в ArrayList String");        
-
+        int index = stringList.stream()
+                            .filter(value -> value.equals(stringValueToSearch))
+                            .findFirst()
+                            .map(stringList::indexOf)
+                            .orElse(-1);
+    
+        Utils.printOperationDuration(startTime, "пошук в ArrayList String");
+    
         if (index >= 0) {
-            System.out.println("Значення '" + stringValueToSearch + "' знайдено в ArrayList за iндексом: " + index);
+            System.out.println("Значення '" + stringValueToSearch + "' знайдено в ArrayList за індексом: " + index);
         } else {
             System.out.println("Значення '" + stringValueToSearch + "' в ArrayList не знайдено.");
         }
     }
+    
 
- /**
-     * Знаходить мiнiмальне та максимальне значення в ArrayList дати i часу.
+    /**
+     * Знаходить мiнiмальне та максимальне значення в ArrayList.
      */
     void findMinAndMaxInList() {
         if (stringList == null || stringList.isEmpty()) {
@@ -147,7 +151,7 @@ public class BasicDataOperationUsingList {
         String min = Collections.min(stringList);
         String max = Collections.max(stringList);
 
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної  в ArrayList");
+        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної в ArrayList");
 
         System.out.println("Мiнiмальне значення в ArrayList: " + min);
         System.out.println("Максимальне значення в ArrayList: " + max);
@@ -158,9 +162,27 @@ public class BasicDataOperationUsingList {
      */
     void sortList() {
         long startTime = System.nanoTime();
-        Collections.sort(stringList);
+        stringList = stringList.stream()
+                            .sorted()
+                            .toList();
+    
         Utils.printOperationDuration(startTime, "сортування ArrayList String");
     }
+    
+    void compareArrayAndSet() {
+        long startTime = System.nanoTime();
+        boolean allElementsMatch = Arrays.stream(stringArray)
+                                        .allMatch(stringList::contains);
+    
+        Utils.printOperationDuration(startTime, "порівняння масиву та множини");
+    
+        if (allElementsMatch) {
+            System.out.println("Усі елементи масиву містяться в множині.");
+        } else {
+            System.out.println("Не всі елементи масиву містяться в множині.");
+        }
+    }
+    
 }
 
 /**
@@ -186,17 +208,14 @@ class Utils {
      * @return Масив об'єктiв String.
      */
     static String[] readArrayFromFile(String pathToFile) {
-        ArrayList<String> tempList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                tempList.add(line);
-            }
+            return br.lines()
+                    .toArray(String[]::new);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Помилка читання даних з файлу: " + pathToFile, e);
         }
-        return tempList.toArray(new String[0]);
     }
+    
 
     /**
      * Записує масив об'єктiв String у файл.
@@ -204,13 +223,14 @@ class Utils {
      * @param stringArray Масив об'єктiв String.
      * @param pathToFile Шлях до файлу для запису.
      */
+    @SuppressWarnings("CallToPrintStackTrace")
     static void writeArrayToFile(String[] stringArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
             for (String line : stringArray) {
                 writer.write(line);
                 writer.newLine();
             }
-        } catch (IOException e) {
+        } catch (IOException e)            {
             e.printStackTrace();
         }
     }
