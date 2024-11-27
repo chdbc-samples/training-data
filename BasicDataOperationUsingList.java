@@ -50,15 +50,15 @@ public class BasicDataOperationUsingList {
         searchArray();
         findMinAndMaxInSet();
         sortArray();
-        searchArray();
         findMinAndMaxInSet();
+        searchArray();
 
         // операцiї з ArrayList
         searchList();
         findMinAndMaxInList();
         sortList();
         findMinAndMaxInList();
-        compareArrayAndSet();
+        compareArrayAndList();
 
         // записати вiдсортований масив у файл
         Utils.writeArrayToFile(stringArray, PATH_TO_DATA_FILE + ".sorted");
@@ -169,17 +169,17 @@ public class BasicDataOperationUsingList {
         Utils.printOperationDuration(startTime, "сортування ArrayList String");
     }
     
-    void compareArrayAndSet() {
+    void compareArrayAndList() {
         long startTime = System.nanoTime();
         boolean allElementsMatch = Arrays.stream(stringArray)
                                         .allMatch(stringList::contains);
     
-        Utils.printOperationDuration(startTime, "порівняння масиву та множини");
+        Utils.printOperationDuration(startTime, "порівняння масиву та списку");
     
         if (allElementsMatch) {
-            System.out.println("Усі елементи масиву містяться в множині.");
+            System.out.println("Усі елементи масиву містяться в списку.");
         } else {
-            System.out.println("Не всі елементи масиву містяться в множині.");
+            System.out.println("Не всі елементи масиву містяться в списку.");
         }
     }
     
