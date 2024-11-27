@@ -85,7 +85,7 @@ public class BasicDataOperationUsingList {
      * Метод зчитує масив та список об'єктiв Short з файлу, сортує їх та виконує пошук значення.
      */
     void doDataOperation() {
-        // операцiї з масивом дати та часу
+        // операцiї з масивом чисел
         searchArray();
         findMinAndMaxInArray();
 
@@ -116,18 +116,18 @@ public class BasicDataOperationUsingList {
 
         Arrays.sort(shortArray);
 
-        Utils.printOperationDuration(startTime, "сортування масиву дати i часу");
+        Utils.printOperationDuration(startTime, "сортування масиву чисел");
     }
 
     /**
-     * Метод для пошуку значення в масивi дати i часу.
+     * Метод для пошуку значення в масивi чисел.
      */
     void searchArray() {
         long startTime = System.nanoTime();
 
         int index = Arrays.binarySearch(this.shortArray, shortValueToSearch);
 
-        Utils.printOperationDuration(startTime, "пошук в масивi дати i часу");
+        Utils.printOperationDuration(startTime, "пошук в масивi чисел");
 
         if (index >= 0) {
             System.out.println("Значення '" + shortValueToSearch + "' знайдено в масивi за iндексом: " + index);
@@ -137,7 +137,7 @@ public class BasicDataOperationUsingList {
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в масивi дати i часу.
+     * Знаходить мiнiмальне та максимальне значення в масивi чисел.
      */
     void findMinAndMaxInArray() {
         if (shortArray == null || shortArray.length == 0) {
@@ -150,7 +150,7 @@ public class BasicDataOperationUsingList {
         Short min = shortArray[0];
         Short max = shortArray[0];
 
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в масивi");
+        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної чисел в масивi");
 
         for (Short shortValue : shortArray) {
             if (shortValue < min) {
@@ -166,14 +166,14 @@ public class BasicDataOperationUsingList {
     }
 
     /**
-     * Шукає задане значення дати i часу в LinkedList дати i часу.
+     * Шукає задане значення чисел в LinkedList чисел.
      */
     void searchList() {
         long startTime = System.nanoTime();
 
         int index = Collections.binarySearch(this.shortList, shortValueToSearch);
 
-        Utils.printOperationDuration(startTime, "пошук в LinkedList дати i часу");        
+        Utils.printOperationDuration(startTime, "пошук в LinkedList чисел");        
 
         if (index >= 0) {
             System.out.println("Значення '" + shortValueToSearch + "' знайдено в LinkedList за iндексом: " + index);
@@ -183,7 +183,7 @@ public class BasicDataOperationUsingList {
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в LinkedList дати i часу.
+     * Знаходить мiнiмальне та максимальне значення в LinkedList чисел.
      */
     void findMinAndMaxInList() {
         if (shortList == null || shortList.isEmpty()) {
@@ -196,7 +196,7 @@ public class BasicDataOperationUsingList {
         Short min = Collections.min(shortList);
         Short max = Collections.max(shortList);
 
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в LinkedList");
+        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної чисел в LinkedList");
 
         System.out.println("Мiнiмальне значення в LinkedList: " + min);
         System.out.println("Максимальне значення в LinkedList: " + max);
@@ -211,7 +211,7 @@ public class BasicDataOperationUsingList {
 
         Collections.sort(shortList);
 
-        Utils.printOperationDuration(startTime, "сортування LinkedList дати i часу");
+        Utils.printOperationDuration(startTime, "сортування LinkedList чисел");
     }
 }
 
