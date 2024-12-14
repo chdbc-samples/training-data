@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Queue;
 import java.util.Arrays;
@@ -11,62 +11,21 @@ import java.util.Collections;
 import java.util.PriorityQueue;
 
 /**
- * Клас BasicDataOperationUsingQueue надає методи для виконання основних операцiй з даними типу LocalDateTime.
- * 
- * <p>Цей клас зчитує данi з файлу "list/LocalDateTime.data", сортує їх та виконує пошук значення в масивi та черзi.</p>
- * 
- * <p>Основнi методи:</p>
- * <ul>
- *   <li>{@link #main(String[])} - Точка входу в програму.</li>
- *   <li>{@link #doDataOperation()} - Виконує основнi операцiї з даними.</li>
- *   <li>{@link #sortArray()} - Сортує масив LocalDateTime.</li>
- *   <li>{@link #searchArray()} - Виконує пошук значення в масивi LocalDateTime.</li>
- *   <li>{@link #findMinAndMaxInArray()} - Знаходить мiнiмальне та максимальне значення в масивi LocalDateTime.</li>
- *   <li>{@link #searchQueue()} - Виконує пошук значення в черзi LocalDateTime.</li>
- *   <li>{@link #findMinAndMaxInQueue()} - Знаходить мiнiмальне та максимальне значення в черзi LocalDateTime.</li>
- *   <li>{@link #peekAndPollQueue()} - Виконує операцiї peek та poll з чергою LocalDateTime.</li>
- * </ul>
- * 
- * <p>Конструктор:</p>
- * <ul>
- *   <li>{@link #BasicDataOperationUsingQueue(String[])} - iнiцiалiзує об'єкт з значенням для пошуку.</li>
- * </ul>
- * 
- * <p>Константи:</p>
- * <ul>
- *   <li>{@link #PATH_TO_DATA_FILE} - Шлях до файлу з даними.</li>
- * </ul>
- * 
- * <p>Змiннi екземпляра:</p>
- * <ul>
- *   <li>{@link #dateTimeValueToSearch} - Значення LocalDateTime для пошуку.</li>
- *   <li>{@link #dateTimeArray} - Масив LocalDateTime.</li>
- *   <li>{@link #dateTimeQueue} - Черга LocalDateTime.</li>
- * </ul>
- * 
- * <p>Приклад використання:</p>
- * <pre>
- * {@code
- * java BasicDataOperationUsingQueue "2024-03-16T00:12:38Z"
- * }
- * </pre>
+ * Клас BasicDataOperationUsingQueue надає методи для виконання основних операцiй з даними типу LocalDate.
+ * <p>Цей клас зчитує данi з файлу "list/LocalDate.data", сортує їх та виконує пошук значення в масивi та черзi.</p>
  */
 public class BasicDataOperationUsingQueue {
-    static final String PATH_TO_DATA_FILE = "list/LocalDateTime.data";
+    private static LocalDate[] dateArray; // Оголошення масиву
+    private static PriorityQueue<LocalDate> dateQueue; // Оголошення черги
+    static final String PATH_TO_DATA_FILE = "list/LocalDate.data";
 
-    LocalDateTime dateTimeValueToSearch;
-    LocalDateTime[] dateTimeArray;
-    Queue<LocalDateTime> dateTimeQueue;
-
-    public static void main(String[] args) {  
-        BasicDataOperationUsingQueue basicDataOperationUsingQueue = new BasicDataOperationUsingQueue(args);
-        basicDataOperationUsingQueue.doDataOperation();
-    }
+    LocalDate dateValueToSearch;
+    LocalDate[] dateValueArray;
+    Queue<LocalDate> dateValueQueue;
 
     /**
-     * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
-     * 
-     * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
+     * Конструктор, який iницiалiзує об'єкт з значенням для пошуку.
+     * @param args Значення для пошуку.
      */
     BasicDataOperationUsingQueue(String[] args) {
         if (args.length == 0) {
@@ -74,170 +33,78 @@ public class BasicDataOperationUsingQueue {
         }
 
         String valueToSearch = args[0];
-        this.dateTimeValueToSearch = LocalDateTime.parse(valueToSearch, DateTimeFormatter.ISO_DATE_TIME);
+        this.dateValueToSearch = LocalDate.parse(valueToSearch, DateTimeFormatter.ISO_DATE); // Конвертація у LocalDate
 
-        dateTimeArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
-
-        dateTimeQueue = new PriorityQueue<>(Arrays.asList(dateTimeArray));
+        dateArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE); // Зчитування масиву
+        dateQueue = new PriorityQueue<>(Arrays.asList(dateArray)); // Ініціалізація черги
     }
 
-    /**
-     * Виконує основнi операцiї з даними.
-     * 
-     * Метод зчитує масив та чергу об'єктiв LocalDateTime з файлу, сортує їх та виконує пошук значення.
-     */
+    public static void main(String[] args) {
+        BasicDataOperationUsingQueue basicDataOperationUsingQueue = new BasicDataOperationUsingQueue(args);
+        basicDataOperationUsingQueue.doDataOperation();
+    }
+
     private void doDataOperation() {
-        // операцiї з масивом дати та часу
         searchArray();
         findMinAndMaxInArray();
-
         sortArray();
-
         searchArray();
         findMinAndMaxInArray();
-
-        // операцiї з Queue дати та часу
         searchQueue();
         findMinAndMaxInQueue();
         peekAndPollQueue();
-
-        // записати вiдсортований масив в окремий файл
-        Utils.writeArrayToFile(dateTimeArray, PATH_TO_DATA_FILE + ".sorted");
+        Utils.writeArrayToFile(dateArray, PATH_TO_DATA_FILE + ".sorted");
     }
 
-    /**
-     * Сортує масив об'єктiв LocalDateTime та виводить початковий i вiдсортований масиви.
-     * Вимiрює та виводить час, витрачений на сортування масиву в наносекундах.
-     * 
-     * Метод виконує наступнi кроки:
-     * <li>1. Виводить початковий масив об'єктiв LocalDateTime.</li>
-     * <li>2. Вимiрює час, витрачений на сортування масиву за допомогою Arrays.sort().</li>
-     * <li>3. Виводить час, витрачений на сортування масиву в наносекундах.</li>
-     * <li>4. Виводить вiдсортований масив об'єктiв LocalDateTime.</li>
-     */
     private void sortArray() {
-        // вимiрюємо час, витрачений на сортування масиву дати i часу 
         long startTime = System.nanoTime();
-
-        Arrays.sort(dateTimeArray);
-
-        Utils.printOperationDuration(startTime, "сортування масиву дати i часу");
+        Arrays.sort(dateArray);
+        Utils.printOperationDuration(startTime, "сортування масиву LocalDate");
     }
 
-    /**
-     * Метод для пошуку значення в масивi дати i часу.
-     */
     private void searchArray() {
-        // вимiрюємо час, витрачений на пошук в масивi дати i часу
         long startTime = System.nanoTime();
-        
-        int index = Arrays.binarySearch(this.dateTimeArray, dateTimeValueToSearch);
-        
-        Utils.printOperationDuration(startTime, "пошук в масивi дати i часу");
-
+        int index = Arrays.binarySearch(dateArray, dateValueToSearch);
+        Utils.printOperationDuration(startTime, "пошук в масивi LocalDate");
         if (index >= 0) {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' знайдено в масивi за iндексом: " + index);
+            System.out.println("\u0417\u043d\u0430\u0447\u0435\u043d\u043d\u044f '" + dateValueToSearch + "' \u0437\u043d\u0430\u0439\u0434\u0435\u043d\u043e \u0437\u0430 i\u043d\u0434\u0435\u043a\u0441\u043e\u043c: " + index);
         } else {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' в масивi не знайдено.");
+            System.out.println("\u0417\u043d\u0430\u0447\u0435\u043d\u043d\u044f '" + dateValueToSearch + "' \u043d\u0435 \u0437\u043d\u0430\u0439\u0434\u0435\u043d\u043e.");
         }
     }
 
-    /**
-     * Знаходить мiнiмальне та максимальне значення в масивi LocalDateTime.
-     */
     private void findMinAndMaxInArray() {
-        if (dateTimeArray == null || dateTimeArray.length == 0) {
-            System.out.println("Масив порожнiй або не iнiцiалiзований.");
-            return;
-        }
-
-        // вимiрюємо час, витрачений на пошук мiнiмальної i максимальної дати i часу
         long startTime = System.nanoTime();
-
-        LocalDateTime min = dateTimeArray[0];
-        LocalDateTime max = dateTimeArray[0];
-
-        for (LocalDateTime dateTime : dateTimeArray) {
-            if (dateTime.isBefore(min)) {
-                min = dateTime;
-            }
-            if (dateTime.isAfter(max)) {
-                max = dateTime;
-            }
-        }
-
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в масивi");
-
-        System.out.println("Мiнiмальне значення в масивi: " + min);
-        System.out.println("Максимальне значення в масивi: " + max);
+        LocalDate min = Collections.min(Arrays.asList(dateArray));
+        LocalDate max = Collections.max(Arrays.asList(dateArray));
+        Utils.printOperationDuration(startTime, "\u043f\u043e\u0448\u0443\u043a \u043c\u0456\u043d\u0456\u043c\u0443 \u0442\u0430 \u043c\u0430\u043a\u0441\u0438\u043c\u0443\u043c\u0443 ");
+        System.out.println("\u041c\u0456\u043d\u0456\u043c\u0430\u043b\u044c\u043d\u0435: " + min);
+        System.out.println("\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u0435: " + max);
     }
 
-    /**
-     * Метод для пошуку значення в черзi дати i часу.
-     */
     private void searchQueue() {
-        // вимiрюємо час, витрачений на пошук в черзi дати i часу
         long startTime = System.nanoTime();
-
-        boolean isFound = this.dateTimeQueue.contains(dateTimeValueToSearch);
-
-        Utils.printOperationDuration(startTime, "пошук в Queue дати i часу");
-
-        if (isFound) {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' знайдено в Queue");
-        } else {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' в Queue не знайдено.");
-        }
+        boolean isFound = dateQueue.contains(dateValueToSearch);
+        Utils.printOperationDuration(startTime, "пошук в Queue LocalDate");
+        System.out.println(isFound ? "\u0417\u043d\u0430\u0439\u0434\u0435\u043d\u043e." : "\u041d\u0435 \u0437\u043d\u0430\u0439\u0434\u0435\u043d\u043e.");
     }
 
-    /**
-     * Знаходить мiнiмальне та максимальне значення в черзi LocalDateTime.
-     */
     private void findMinAndMaxInQueue() {
-        if (dateTimeQueue == null || dateTimeQueue.isEmpty()) {
-            System.out.println("Queue порожнiй або не iнiцiалiзований.");
-            return;
-        }
-
-        // вимiрюємо час, витрачений на пошук мiнiмальної i максимальної дати i часу
-        long startTime = System.nanoTime();
-
-        LocalDateTime min = Collections.min(dateTimeQueue);
-        LocalDateTime max = Collections.max(dateTimeQueue);
-
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в Queue");
-
-        System.out.println("Мiнiмальне значення в Queue: " + min);
-        System.out.println("Максимальне значення в Queue: " + max);
+        LocalDate min = Collections.min(dateQueue);
+        LocalDate max = Collections.max(dateQueue);
+        System.out.println("\u041c\u0456\u043d: " + min + ", \u041c\u0430\u043a\u0441: " + max);
     }
 
-    /**
-     * Виконує операцiї peek та poll з чергою LocalDateTime.
-     */
     private void peekAndPollQueue() {
-        if (dateTimeQueue == null || dateTimeQueue.isEmpty()) {
-            System.out.println("Queue порожнiй або не iнiцiалiзований.");
-            return;
-        }
-
-        LocalDateTime firstElement = dateTimeQueue.peek();
-        System.out.println("Перший елемент у черзi: " + firstElement);
-
-        firstElement = dateTimeQueue.poll();
-        System.out.println("Забрати перший елемент у черзi: " + firstElement);
-
-        firstElement = dateTimeQueue.peek();
-        System.out.println("Перший елемент у черзi: " + firstElement);
+        System.out.println("Peek: " + dateQueue.peek());
+        System.out.println("Poll: " + dateQueue.poll());
+        System.out.println("Peek after poll: " + dateQueue.peek());
     }
 }
 
-/**
- * Клас Utils мiститить допомiжнi методи для роботи з даними типу LocalDateTime.
- */
 class Utils {
     /**
      * Виводить час виконання операцiї в наносекундах.
-     * 
      * @param startTime Час початку операцiї в наносекундах.
      * @param operationName Назва операцiї.
      */
@@ -249,26 +116,25 @@ class Utils {
 
     /**
      * Зчитує масив об'єктiв LocalDateTime з файлу.
-     * 
      * @param pathToFile Шлях до файлу з даними.
      * @return Масив об'єктiв LocalDateTime.
      */
-    static LocalDateTime[] readArrayFromFile(String pathToFile) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        LocalDateTime[] tempArray = new LocalDateTime[1000];
+    static LocalDate[] readArrayFromFile(String pathToFile) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE; // Формат для LocalDate
+        LocalDate[] tempArray = new LocalDate[1000];
         int index = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                LocalDateTime dateTime = LocalDateTime.parse(line, formatter);
-                tempArray[index++] = dateTime;
+                LocalDate date = LocalDate.parse(line, formatter); // Конвертація тексту у LocalDate
+                tempArray[index++] = date;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        LocalDateTime[] finalArray = new LocalDateTime[index];
+        LocalDate[] finalArray = new LocalDate[index];
         System.arraycopy(tempArray, 0, finalArray, 0, index);
 
         return finalArray;
@@ -276,14 +142,13 @@ class Utils {
 
     /**
      * Записує масив об'єктiв LocalDateTime у файл.
-     * 
-     * @param dateTimeArray Масив об'єктiв LocalDateTime.
+     * @param dateArray Масив об'єктiв LocalDateTime.
      * @param pathToFile Шлях до файлу для запису.
      */
-    static void writeArrayToFile(LocalDateTime[] dateTimeArray, String pathToFile) {
+    static void writeArrayToFile(LocalDate[] dateArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
-            for (LocalDateTime dateTime : dateTimeArray) {
-                writer.write(dateTime.toString());
+            for (LocalDate date : dateArray) {
+                writer.write(date.toString());
                 writer.newLine();
             }
         } catch (IOException e) {
