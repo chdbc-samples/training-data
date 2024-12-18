@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Клас BasicDataOperationUsingSet надає методи для виконання основних операцій з даними типу int.
+ * Клас BasicDataOperationUsingSet надає методи для виконання основних операцій з даними типу long.
  */
 public class BasicDataOperationUsingSet {
 
     static final String PATH_TO_DATA_FILE = "list/int.data";  // Шлях до файлу з даними
     private int intValueToSearch;  // Значення для пошуку
-    private int[] intArray;  // Масив для зберігання значень типу int
-    private Set<Integer> intSet = new HashSet<>();  // Колекція HashSet для значень типу int
+    private long[] longArray;  // Масив для зберігання значень типу long
+    private Set<Long> longSet = new HashSet<>();  // Колекція HashSet для значень типу long
 
     public static void main(String[] args) {
         BasicDataOperationUsingSet operation = new BasicDataOperationUsingSet();
@@ -36,11 +36,11 @@ public class BasicDataOperationUsingSet {
         }
 
         // Зчитуємо масив з файлу
-        this.intArray = readArrayFromFile(PATH_TO_DATA_FILE);
+        this.longArray = readArrayFromFile(PATH_TO_DATA_FILE);
 
         // Записуємо елементи в HashSet
-        for (int value : intArray) {
-            intSet.add(value);
+        for (long value : longArray) {
+            longSet.add(value);
         }
     }
 
@@ -48,38 +48,38 @@ public class BasicDataOperationUsingSet {
      * Виконує основні операції з даними.
      */
     private void doDataOperation() {
-        // Операції з масивом int
+        // Операції з масивом long
         searchArray();
         findMinAndMaxInArray();
         sortArray();
         searchArray();
         findMinAndMaxInArray();
 
-        // Операції з HashSet int
+        // Операції з HashSet long
         searchSet();
         findMinAndMaxInSet();
         compareArrayAndSet();
 
         // Запис відсортованого масиву в окремий файл
-        writeArrayToFile(intArray, PATH_TO_DATA_FILE + ".sorted");
+        writeArrayToFile(longArray, PATH_TO_DATA_FILE + ".sorted");
     }
 
     /**
-     * Сортує масив int та виводить час, витрачений на сортування.
+     * Сортує масив long та виводить час, витрачений на сортування.
      */
     private void sortArray() {
         long startTime = System.nanoTime();
-        Arrays.sort(intArray);  // Сортуємо масив
-        printOperationDuration(startTime, "сортування масиву int");
+        Arrays.sort(longArray);  // Сортуємо масив
+        printOperationDuration(startTime, "сортування масиву long");
     }
 
     /**
-     * Пошук значення в масиві int.
+     * Пошук значення в масиві long.
      */
     private void searchArray() {
         long startTime = System.nanoTime();
-        int index = Arrays.binarySearch(intArray, intValueToSearch);
-        printOperationDuration(startTime, "пошук в масивi int");
+        int index = Arrays.binarySearch(longArray, intValueToSearch);  // Пошук за допомогою binarySearch
+        printOperationDuration(startTime, "пошук в масивi long");
 
         if (index >= 0) {
             System.out.println("Значення '" + intValueToSearch + "' знайдено в масивi за індексом: " + index);
@@ -89,17 +89,17 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Знаходить мінімальне та максимальне значення в масиві int.
+     * Знаходить мінімальне та максимальне значення в масиві long.
      */
     private void findMinAndMaxInArray() {
-        if (intArray == null || intArray.length == 0) {
+        if (longArray == null || longArray.length == 0) {
             System.out.println("Масив порожній або не ініціалізований.");
             return;
         }
 
         long startTime = System.nanoTime();
-        int min = Arrays.stream(intArray).min().orElseThrow();
-        int max = Arrays.stream(intArray).max().orElseThrow();
+        long min = Arrays.stream(longArray).min().orElseThrow();
+        long max = Arrays.stream(longArray).max().orElseThrow();
         printOperationDuration(startTime, "пошук мінімального і максимального значення в масиві");
 
         System.out.println("Мінімальне значення в масиві: " + min);
@@ -107,12 +107,12 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Пошук значення в HashSet int.
+     * Пошук значення в HashSet long.
      */
     private void searchSet() {
         long startTime = System.nanoTime();
-        boolean isFound = intSet.contains(intValueToSearch);
-        printOperationDuration(startTime, "пошук в HashSet int");
+        boolean isFound = longSet.contains((long) intValueToSearch);
+        printOperationDuration(startTime, "пошук в HashSet long");
 
         if (isFound) {
             System.out.println("Значення '" + intValueToSearch + "' знайдено в HashSet.");
@@ -122,17 +122,17 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Знаходить мінімальне та максимальне значення в HashSet int.
+     * Знаходить мінімальне та максимальне значення в HashSet long.
      */
     private void findMinAndMaxInSet() {
-        if (intSet.isEmpty()) {
+        if (longSet.isEmpty()) {
             System.out.println("HashSet порожній або не ініціалізований.");
             return;
         }
 
         long startTime = System.nanoTime();
-        int min = intSet.stream().min(Integer::compare).orElseThrow();
-        int max = intSet.stream().max(Integer::compare).orElseThrow();
+        long min = longSet.stream().min(Long::compare).orElseThrow();
+        long max = longSet.stream().max(Long::compare).orElseThrow();
         printOperationDuration(startTime, "пошук мінімального і максимального значення в HashSet");
 
         System.out.println("Мінімальне значення в HashSet: " + min);
@@ -143,12 +143,12 @@ public class BasicDataOperationUsingSet {
      * Порівнює елементи масиву та множини.
      */
     private void compareArrayAndSet() {
-        System.out.println("Кількість елементів в масиві: " + intArray.length);
-        System.out.println("Кількість елементів в HashSet: " + intSet.size());
+        System.out.println("Кількість елементів в масиві: " + longArray.length);
+        System.out.println("Кількість елементів в HashSet: " + longSet.size());
 
         boolean allElementsMatch = true;
-        for (int value : intArray) {
-            if (!intSet.contains(value)) {
+        for (long value : longArray) {
+            if (!longSet.contains(value)) {
                 allElementsMatch = false;
                 break;
             }
@@ -162,19 +162,19 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Зчитує масив int з файлу.
+     * Зчитує масив long з файлу.
      */
-    private int[] readArrayFromFile(String pathToFile) {
-        int[] tempArray = new int[1000];
+    private long[] readArrayFromFile(String pathToFile) {
+        long[] tempArray = new long[1000];
         int index = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
             String line;
             while ((line = br.readLine()) != null) {
                 try {
-                    tempArray[index++] = Integer.parseInt(line);  // Перетворення рядка в int
+                    tempArray[index++] = Long.parseLong(line);  // Перетворення рядка в long
                 } catch (NumberFormatException e) {
-                    System.out.println("Попередження: не вдалося перетворити '" + line + "' на int.");
+                    System.out.println("Попередження: не вдалося перетворити '" + line + "' на long.");
                 }
             }
         } catch (IOException e) {
@@ -185,12 +185,12 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Записує масив int в файл.
+     * Записує масив long в файл.
      */
-    private void writeArrayToFile(int[] intArray, String pathToFile) {
+    private void writeArrayToFile(long[] longArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
-            for (int value : intArray) {
-                writer.write(Integer.toString(value));
+            for (long value : longArray) {
+                writer.write(Long.toString(value));
                 writer.newLine();
             }
             System.out.println("Відсортовані дані записані у файл: " + pathToFile);
