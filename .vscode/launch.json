@@ -6,10 +6,26 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BasicDataOperationUsingSet",
+            "request": "launch",
+            "mainClass": "BasicDataOperationUsingSet",
+            "projectName": "Programming-3_c1315d7d",
+            "args": "246813579"
+        },
+        {
+            "type": "java",
+            "name": "BasicDataOperationUsingList",
+            "request": "launch",
+            "mainClass": "BasicDataOperationUsingList",
+            "projectName": "Programming-3_c1315d7d",
+            "args": "246813579"
+        },
+        {
+            "type": "java",
             "name": "BasicDataOperation",
             "request": "launch",
             "mainClass": "${file}",
-            "args": "2024-03-07T10:55:43"
+            "args": "246813579"
         }
     ]
 }
