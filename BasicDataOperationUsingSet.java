@@ -4,50 +4,54 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Клас BasicDataOperationUsingSet надає методи для виконання основних операцiй з даними типу int.
+ * Клас BasicDataOperationUsingSet надає методи для виконання основних операцій з даними типу int.
  */
 public class BasicDataOperationUsingSet {
-    static final String PATH_TO_DATA_FILE = "list/int.data";  // Шлях до файлу з даними
 
-    int intValueToSearch;  // Значення для пошуку
-    int[] intArray;  // Масив для зберігання значень типу int
-    Set<Integer> intSet = new HashSet<>();  // Колекція HashSet для значень типу int
+    static final String PATH_TO_DATA_FILE = "list/int.data";  // Шлях до файлу з даними
+    private int intValueToSearch;  // Значення для пошуку
+    private int[] intArray;  // Масив для зберігання значень типу int
+    private Set<Integer> intSet = new HashSet<>();  // Колекція HashSet для значень типу int
 
     public static void main(String[] args) {
-        BasicDataOperationUsingSet basicDataOperationUsingSet = new BasicDataOperationUsingSet(args);
-        basicDataOperationUsingSet.doDataOperation();
+        BasicDataOperationUsingSet operation = new BasicDataOperationUsingSet();
+        operation.parseArgs(args);
+        operation.doDataOperation();
     }
 
     /**
-     * Конструктор, який iнiцiалiзує об'єкт з значенням для пошуку.
+     * Метод для розбору аргументів командного рядка.
      *
-     * @param args Аргументи командного рядка, де перший аргумент - значення для пошуку.
+     * @param args Аргументи командного рядка.
      */
-    BasicDataOperationUsingSet(String[] args) {
+    private void parseArgs(String[] args) {
         if (args.length == 0) {
-            throw new RuntimeException("Вiдсутнє значення для пошуку");
+            throw new RuntimeException("Вiдсутнє значення для пошуку.");
         }
 
-        String valueToSearch = args[0];
-        this.intValueToSearch = Integer.parseInt(valueToSearch);  // Перетворення тексту в int
+        try {
+            this.intValueToSearch = Integer.parseInt(args[0]);  // Перетворення першого аргументу в int
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Невірне значення для пошуку: " + args[0]);
+        }
 
-        intArray = readArrayFromFile(PATH_TO_DATA_FILE);  // Зчитування масиву з файлу
-        intSet = new HashSet<>();
+        // Зчитуємо масив з файлу
+        this.intArray = readArrayFromFile(PATH_TO_DATA_FILE);
+
+        // Записуємо елементи в HashSet
         for (int value : intArray) {
-            intSet.add(value);  // Запис в HashSet
+            intSet.add(value);
         }
     }
 
     /**
-     * Виконує основнi операцiї з даними.
+     * Виконує основні операції з даними.
      */
     private void doDataOperation() {
         // Операції з масивом int
         searchArray();
         findMinAndMaxInArray();
-
         sortArray();
-
         searchArray();
         findMinAndMaxInArray();
 
@@ -65,97 +69,82 @@ public class BasicDataOperationUsingSet {
      */
     private void sortArray() {
         long startTime = System.nanoTime();
-
         Arrays.sort(intArray);  // Сортуємо масив
-
         printOperationDuration(startTime, "сортування масиву int");
     }
 
     /**
-     * Метод для пошуку значення в масивi int.
+     * Пошук значення в масиві int.
      */
     private void searchArray() {
         long startTime = System.nanoTime();
-
-        int index = Arrays.binarySearch(this.intArray, intValueToSearch);  // Пошук в масиві
-
+        int index = Arrays.binarySearch(intArray, intValueToSearch);
         printOperationDuration(startTime, "пошук в масивi int");
 
         if (index >= 0) {
-            System.out.println("Значення '" + intValueToSearch + "' знайдено в масивi за iндексом: " + index);
+            System.out.println("Значення '" + intValueToSearch + "' знайдено в масивi за індексом: " + index);
         } else {
             System.out.println("Значення '" + intValueToSearch + "' в масивi не знайдено.");
         }
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в масивi int.
+     * Знаходить мінімальне та максимальне значення в масиві int.
      */
     private void findMinAndMaxInArray() {
         if (intArray == null || intArray.length == 0) {
-            System.out.println("Масив порожнiй або не iнiцiалiзований.");
+            System.out.println("Масив порожній або не ініціалізований.");
             return;
         }
 
         long startTime = System.nanoTime();
+        int min = Arrays.stream(intArray).min().orElseThrow();
+        int max = Arrays.stream(intArray).max().orElseThrow();
+        printOperationDuration(startTime, "пошук мінімального і максимального значення в масиві");
 
-        int min = intArray[0];
-        int max = intArray[0];
-
-        for (int value : intArray) {
-            if (value < min) min = value;
-            if (value > max) max = value;
-        }
-
-        printOperationDuration(startTime, "пошук мiнiмального i максимального значення в масивi");
-
-        System.out.println("Мiнiмальне значення в масивi: " + min);
-        System.out.println("Максимальне значення в масивi: " + max);
+        System.out.println("Мінімальне значення в масиві: " + min);
+        System.out.println("Максимальне значення в масиві: " + max);
     }
 
     /**
-     * Метод для пошуку значення в HashSet int.
+     * Пошук значення в HashSet int.
      */
     private void searchSet() {
         long startTime = System.nanoTime();
-
-        boolean isFound = this.intSet.contains(intValueToSearch);  // Пошук в HashSet
-
+        boolean isFound = intSet.contains(intValueToSearch);
         printOperationDuration(startTime, "пошук в HashSet int");
 
         if (isFound) {
-            System.out.println("Значення '" + intValueToSearch + "' знайдено в HashSet");
+            System.out.println("Значення '" + intValueToSearch + "' знайдено в HashSet.");
         } else {
             System.out.println("Значення '" + intValueToSearch + "' в HashSet не знайдено.");
         }
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в HashSet int.
+     * Знаходить мінімальне та максимальне значення в HashSet int.
      */
     private void findMinAndMaxInSet() {
-        if (intSet == null || intSet.isEmpty()) {
-            System.out.println("HashSet порожнiй або не iнiцiалiзований.");
+        if (intSet.isEmpty()) {
+            System.out.println("HashSet порожній або не ініціалізований.");
             return;
         }
 
         long startTime = System.nanoTime();
-
         int min = intSet.stream().min(Integer::compare).orElseThrow();
         int max = intSet.stream().max(Integer::compare).orElseThrow();
+        printOperationDuration(startTime, "пошук мінімального і максимального значення в HashSet");
 
-        printOperationDuration(startTime, "пошук мiнiмального i максимального значення в HashSet");
-
-        System.out.println("Мiнiмальне значення в HashSet: " + min);
+        System.out.println("Мінімальне значення в HashSet: " + min);
         System.out.println("Максимальне значення в HashSet: " + max);
     }
 
     /**
-     * Порiвнює елементи масиву та множини.
+     * Порівнює елементи масиву та множини.
      */
     private void compareArrayAndSet() {
-        System.out.println("Кiлькiсть елементiв в масивi: " + intArray.length);
-        System.out.println("Кiлькiсть елементiв в HashSet: " + intSet.size());
+        System.out.println("Кількість елементів в масиві: " + intArray.length);
+        System.out.println("Кількість елементів в HashSet: " + intSet.size());
 
         boolean allElementsMatch = true;
         for (int value : intArray) {
@@ -166,9 +155,9 @@ public class BasicDataOperationUsingSet {
         }
 
         if (allElementsMatch) {
-            System.out.println("Всi елементи масиву присутнi в HashSet.");
+            System.out.println("Всі елементи масиву присутні в HashSet.");
         } else {
-            System.out.println("Не всi елементи масиву присутнi в HashSet.");
+            System.out.println("Не всі елементи масиву присутні в HashSet.");
         }
     }
 
@@ -201,7 +190,7 @@ public class BasicDataOperationUsingSet {
     private void writeArrayToFile(int[] intArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
             for (int value : intArray) {
-                writer.write(Integer.toString(value));  // Запис в файл
+                writer.write(Integer.toString(value));
                 writer.newLine();
             }
             System.out.println("Відсортовані дані записані у файл: " + pathToFile);
@@ -211,14 +200,14 @@ public class BasicDataOperationUsingSet {
     }
 
     /**
-     * Виводить час виконання операцiї в наносекундах.
+     * Виводить час виконання операції в наносекундах.
      *
-     * @param startTime Час початку операцiї в наносекундах.
-     * @param operationName Назва операцiї.
+     * @param startTime Час початку операції в наносекундах.
+     * @param operationName Назва операції.
      */
     private void printOperationDuration(long startTime, String operationName) {
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("\n>>>>>>>>>> Час виконання операцiї '" + operationName + "': " + duration + " наносекунд");
+        System.out.println("\n>>>>>>>>>> Час виконання операції '" + operationName + "': " + duration + " наносекунд");
     }
 }
