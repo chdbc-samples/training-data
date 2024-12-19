@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,11 +52,11 @@ import java.util.List;
  * </pre>
  */
 public class BasicDataOperationUsingList {
-    static final String PATH_TO_DATA_FILE = "list/LocalDateTime.data";
+    static final String PATH_TO_DATA_FILE = "list/LocalDate.data";
 
-    LocalDateTime dateTimeValueToSearch;
-    LocalDateTime[] dateTimeArray;
-    List<LocalDateTime> dateTimeList;
+    LocalDate dateTimeValueToSearch;
+    LocalDate[] dateTimeArray;
+    List<LocalDate> dateTimeList;
 
     public static void main(String[] args) {  
         BasicDataOperationUsingList basicDataOperationUsingList = new BasicDataOperationUsingList(args);
@@ -74,7 +74,7 @@ public class BasicDataOperationUsingList {
         }
 
         String searchValue = args[0];
-        dateTimeValueToSearch = LocalDateTime.parse(searchValue, DateTimeFormatter.ISO_DATE_TIME);
+        dateTimeValueToSearch = LocalDate.parse(searchValue, DateTimeFormatter.ISO_DATE_TIME);
 
         dateTimeArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
         dateTimeList = new ArrayList<>(Arrays.asList(dateTimeArray));
@@ -128,7 +128,7 @@ public class BasicDataOperationUsingList {
 
         int index = Arrays.binarySearch(this.dateTimeArray, dateTimeValueToSearch);
 
-        Utils.printOperationDuration(startTime, "пошук в масивi дати i часу");
+        Utils.printOperationDuration(startTime, "пошук в масивi дати");
 
         if (index >= 0) {
             System.out.println("Значення '" + dateTimeValueToSearch + "' знайдено в масивi за iндексом: " + index);
@@ -148,10 +148,10 @@ public class BasicDataOperationUsingList {
 
         long startTime = System.nanoTime();
 
-        LocalDateTime min = dateTimeArray[0];
-        LocalDateTime max = dateTimeArray[0];
+        LocalDate min = dateTimeArray[0];
+        LocalDate max = dateTimeArray[0];
 
-        for (LocalDateTime dateTime : dateTimeArray) {
+        for (LocalDate dateTime : dateTimeArray) {
             if (dateTime.isBefore(min)) {
                 min = dateTime;
             }
@@ -194,8 +194,8 @@ public class BasicDataOperationUsingList {
 
         long startTime = System.nanoTime();
 
-        LocalDateTime min = Collections.min(dateTimeList);
-        LocalDateTime max = Collections.max(dateTimeList);
+        LocalDate min = Collections.min(dateTimeList);
+        LocalDate max = Collections.max(dateTimeList);
 
         Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в ArrayList");
 
@@ -238,22 +238,22 @@ class Utils {
      * @param pathToFile Шлях до файлу з даними.
      * @return Масив об'єктiв LocalDateTime.
      */
-    static LocalDateTime[] readArrayFromFile(String pathToFile) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        LocalDateTime[] tempArray = new LocalDateTime[1000];
+    static LocalDate[] readArrayFromFile(String pathToFile) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate[] tempArray = new LocalDate[1000];
         int index = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                LocalDateTime dateTime = LocalDateTime.parse(line, formatter);
+                LocalDate dateTime = LocalDate.parse(line, formatter);
                 tempArray[index++] = dateTime;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        LocalDateTime[] finalArray = new LocalDateTime[index];
+        LocalDate[] finalArray = new LocalDate[index];
         System.arraycopy(tempArray, 0, finalArray, 0, index);
 
         return finalArray;
@@ -265,9 +265,9 @@ class Utils {
      * @param dateTimeArray Масив об'єктiв LocalDateTime.
      * @param pathToFile Шлях до файлу для запису.
      */
-    static void writeArrayToFile(LocalDateTime[] dateTimeArray, String pathToFile) {
+    static void writeArrayToFile(LocalDate[] dateTimeArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
-            for (LocalDateTime dateTime : dateTimeArray) {
+            for (LocalDate dateTime : dateTimeArray) {
                 writer.write(dateTime.toString());
                 writer.newLine();
             }
