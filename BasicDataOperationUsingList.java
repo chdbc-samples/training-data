@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Клас BasicDataOperationUsingList надає методи для виконання основних операцiй з даними типу LocalDateTime.
@@ -90,7 +92,7 @@ public class BasicDataOperationUsingList {
         searchArray();
         findMinAndMaxInArray();
 
-        sortArray();
+        dateArray = sortArray();
         
         searchArray();
         findMinAndMaxInArray();
@@ -112,12 +114,14 @@ public class BasicDataOperationUsingList {
      * Сортує масив об'єктiв LocalDateTime та виводить початковий i вiдсортований масиви.
      * Вимiрює та виводить час, витрачений на сортування масиву в наносекундах.
      */
-    void sortArray() {
+    LocalDate[] sortArray() {
         long startTime = System.nanoTime();
 
-        Arrays.stream(dateArray).sorted().toArray(LocalDate[]::new);
+        LocalDate[] localDates = Arrays.stream(dateArray).sorted().toArray(LocalDate[]::new);
 
         Utils.printOperationDuration(startTime, "сортування масиву дати i часу");
+        
+        return localDates;        
     }
 
     /**
@@ -201,7 +205,7 @@ public class BasicDataOperationUsingList {
     void sortList() {
         long startTime = System.nanoTime();
 
-        dateList.sort(LocalDate::compareTo);
+        dateList= dateList.stream().sorted().collect(Collectors.toList());
 
         Utils.printOperationDuration(startTime, "сортування ArrayList дати i часу");
     }
