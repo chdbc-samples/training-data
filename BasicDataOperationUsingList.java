@@ -74,7 +74,7 @@ public class BasicDataOperationUsingList {
         }
 
         String searchValue = args[0];
-        dateTimeValueToSearch = LocalDate.parse(searchValue, DateTimeFormatter.ISO_DATE_TIME);
+        dateTimeValueToSearch = LocalDate.parse(searchValue, DateTimeFormatter.ISO_DATE);
 
         dateArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
         dateList = new ArrayList<>(Arrays.asList(dateArray));
@@ -230,20 +230,16 @@ class Utils {
      * @return Масив об'єктiв LocalDateTime.
      */
     static LocalDate[] readArrayFromFile(String pathToFile) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate[] tempArray = new LocalDate[1000];
-        int index = 0;
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
-            br.lines().map(dataLine -> LocalDate.parse(dataLine, formatter)).toArray(LocalDate[]::new);
+            return br.lines().map(dataLine -> LocalDate.parse(dataLine, formatter)).toArray(LocalDate[]::new);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        LocalDate[] finalArray = new LocalDate[index];
-        System.arraycopy(tempArray, 0, finalArray, 0, index);
-
-        return finalArray;
+        
+        return null;
     }
 
     /**
