@@ -3,27 +3,25 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Клас BasicDataOperationUsingSet надає методи для виконання основних операцiй з даними типу LocalDateTime.
+ * Клас BasicDataOperationUsingSet надає методи для виконання основних операцiй з даними типу Byte.
  * 
- * <p>Цей клас зчитує данi з файлу "list/LocalDateTime.data", сортує їх та виконує пошук значення в масивi та множинi.</p>
+ * <p>Цей клас зчитує данi з файлу "list/byte.data", сортує їх та виконує пошук значення в масивi та множинi.</p>
  * 
  * <p>Основнi методи:</p>
  * <ul>
  *   <li>{@link #main(String[])} - Точка входу в програму.</li>
  *   <li>{@link #doDataOperation()} - Виконує основнi операцiї з даними.</li>
- *   <li>{@link #sortArray()} - Сортує масив LocalDateTime.</li>
- *   <li>{@link #searchArray()} - Виконує пошук значення в масивi LocalDateTime.</li>
- *   <li>{@link #findMinAndMaxInArray()} - Знаходить мiнiмальне та максимальне значення в масивi LocalDateTime.</li>
- *   <li>{@link #searchSet()} - Виконує пошук значення в множинi LocalDateTime.</li>
- *   <li>{@link #findMinAndMaxInSet()} - Знаходить мiнiмальне та максимальне значення в множинi LocalDateTime.</li>
+ *   <li>{@link #sortArray()} - Сортує масив Byte.</li>
+ *   <li>{@link #searchArray()} - Виконує пошук значення в масивi Byte.</li>
+ *   <li>{@link #findMinAndMaxInArray()} - Знаходить мiнiмальне та максимальне значення в масивi Byte.</li>
+ *   <li>{@link #searchSet()} - Виконує пошук значення в множинi Byte.</li>
+ *   <li>{@link #findMinAndMaxInSet()} - Знаходить мiнiмальне та максимальне значення в множинi Byte.</li>
  *   <li>{@link #compareArrayAndSet()} - Порiвнює елементи масиву та множини.</li>
  * </ul>
  * 
@@ -39,26 +37,26 @@ import java.util.Set;
  * 
  * <p>Змiннi екземпляра:</p>
  * <ul>
- *   <li>{@link #dateTimeValueToSearch} - Значення LocalDateTime для пошуку.</li>
- *   <li>{@link #dateTimeArray} - Масив LocalDateTime.</li>
- *   <li>{@link #dateTimeSet} - Множина LocalDateTime.</li>
+ *   <li>{@link #byteToSearch} - Значення Byte для пошуку.</li>
+ *   <li>{@link #byteArray} - Масив Byte.</li>
+ *   <li>{@link #byteSet} - Множина Byte.</li>
  * </ul>
  * 
  * <p>Приклад використання:</p>
  * <pre>
  * {@code
- * java BasicDataOperationUsingSet "2024-03-16T00:12:38Z"
+ * java BasicDataOperationUsingSet "78"
  * }
  * </pre>
  */
 public class BasicDataOperationUsingSet {
-    static final String PATH_TO_DATA_FILE = "list/LocalDateTime.data";
+    static final String PATH_TO_DATA_FILE = "list/byte.data";
 
-    LocalDateTime dateTimeValueToSearch;
-    LocalDateTime[] dateTimeArray;
-    Set<LocalDateTime> dateTimeSet = new HashSet<>();
+    Byte byteToSearch;
+    Byte[] byteArray;
+    Set<Byte> byteSet = new HashSet<>();
 
-    public static void main(String[] args) {  
+    public static void main(String[] args) {
         BasicDataOperationUsingSet basicDataOperationUsingSet = new BasicDataOperationUsingSet(args);
         basicDataOperationUsingSet.doDataOperation();
     }
@@ -73,20 +71,19 @@ public class BasicDataOperationUsingSet {
             throw new RuntimeException("Вiдсутнє значення для пошуку");
         }
 
-        String valueToSearch = args[0];
-        this.dateTimeValueToSearch = LocalDateTime.parse(valueToSearch, DateTimeFormatter.ISO_DATE_TIME);
+        this.byteToSearch = Byte.parseByte(args[0]);
 
-        dateTimeArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
-        dateTimeSet = new HashSet<>(Arrays.asList(dateTimeArray));
+        byteArray = Utils.readArrayFromFile(PATH_TO_DATA_FILE);
+        byteSet = new HashSet<>(Arrays.asList(byteArray));
     }
 
     /**
      * Виконує основнi операцiї з даними.
      * 
-     * Метод зчитує масив та множину об'єктiв LocalDateTime з файлу, сортує їх та виконує пошук значення.
+     * Метод зчитує масив та множину об'єктiв Byte з файлу, сортує їх та виконує пошук значення.
      */
     private void doDataOperation() {
-        // операцiї з масивом дати та часу
+        // операцiї з масивом чисе
         searchArray();
         findMinAndMaxInArray();
 
@@ -95,105 +92,105 @@ public class BasicDataOperationUsingSet {
         searchArray();
         findMinAndMaxInArray();
 
-        // операцiї з HashSet дати та часу
+        // операцiї з HashSet чисе
         searchSet();
         findMinAndMaxInSet();
         compareArrayAndSet();
 
         // записати вiдсортований масив в окремий файл
-        Utils.writeArrayToFile(dateTimeArray, PATH_TO_DATA_FILE + ".sorted");
+        Utils.writeArrayToFile(byteArray, PATH_TO_DATA_FILE + ".sorted");
     }
 
     /**
-     * Сортує масив об'єктiв LocalDateTime та виводить початковий i вiдсортований масиви.
+     * Сортує масив об'єктiв Byte та виводить початковий i вiдсортований масиви.
      * Вимiрює та виводить час, витрачений на сортування масиву в наносекундах.
      */
     private void sortArray() {
         long startTime = System.nanoTime();
 
-        Arrays.sort(dateTimeArray);
+        Arrays.sort(byteArray);
 
-        Utils.printOperationDuration(startTime, "сортування масиву дати i часу");
+        Utils.printOperationDuration(startTime, "сортування масиву чисел");
     }
 
     /**
-     * Метод для пошуку значення в масивi дати i часу.
+     * Метод для пошуку значення в масивi чисел.
      */
     private void searchArray() {
         long startTime = System.nanoTime();
 
-        int index = Arrays.binarySearch(this.dateTimeArray, dateTimeValueToSearch);
+        int index = Arrays.binarySearch(this.byteArray, byteToSearch);
 
-        Utils.printOperationDuration(startTime, "пошук в масивi дати i часу");
+        Utils.printOperationDuration(startTime, "пошук в масивi чисел");
 
         if (index >= 0) {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' знайдено в масивi за iндексом: " + index);
+            System.out.println("Значення '" + byteToSearch + "' знайдено в масивi за iндексом: " + index);
         } else {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' в масивi не знайдено.");
+            System.out.println("Значення '" + byteToSearch + "' в масивi не знайдено.");
         }
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в масивi LocalDateTime.
+     * Знаходить мiнiмальне та максимальне значення в масивi Byte.
      */
     private void findMinAndMaxInArray() {
-        if (dateTimeArray == null || dateTimeArray.length == 0) {
+        if (byteArray == null || byteArray.length == 0) {
             System.out.println("Масив порожнiй або не iнiцiалiзований.");
             return;
         }
 
         long startTime = System.nanoTime();
 
-        LocalDateTime min = dateTimeArray[0];
-        LocalDateTime max = dateTimeArray[0];
+        Byte min = byteArray[0];
+        Byte max = byteArray[0];
 
-        for (LocalDateTime dateTime : dateTimeArray) {
-            if (dateTime.isBefore(min)) {
+        for (Byte dateTime : byteArray) {
+            if (dateTime < min) {
                 min = dateTime;
             }
-            if (dateTime.isAfter(max)) {
+            if (dateTime > max) {
                 max = dateTime;
             }
         }
 
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в масивi");
+        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної чисел в масивi");
 
         System.out.println("Мiнiмальне значення в масивi: " + min);
         System.out.println("Максимальне значення в масивi: " + max);
     }
 
     /**
-     * Метод для пошуку значення в множинi дати i часу.
+     * Метод для пошуку значення в множинi чисел.
      */
     private void searchSet() {
         long startTime = System.nanoTime();
 
-        boolean isFound = this.dateTimeSet.contains(dateTimeValueToSearch);
+        boolean isFound = this.byteSet.contains(byteToSearch);
 
-        Utils.printOperationDuration(startTime, "пошук в HashSet дати i часу");
+        Utils.printOperationDuration(startTime, "пошук в HashSet чисел");
 
         if (isFound) {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' знайдено в HashSet");
+            System.out.println("Значення '" + byteToSearch + "' знайдено в HashSet");
         } else {
-            System.out.println("Значення '" + dateTimeValueToSearch + "' в HashSet не знайдено.");
+            System.out.println("Значення '" + byteToSearch + "' в HashSet не знайдено.");
         }
     }
 
     /**
-     * Знаходить мiнiмальне та максимальне значення в множинi LocalDateTime.
+     * Знаходить мiнiмальне та максимальне значення в множинi Byte.
      */
     private void findMinAndMaxInSet() {
-        if (dateTimeSet == null || dateTimeSet.isEmpty()) {
+        if (byteSet == null || byteSet.isEmpty()) {
             System.out.println("HashSet порожнiй або не iнiцiалiзований.");
             return;
         }
 
         long startTime = System.nanoTime();
 
-        LocalDateTime min = Collections.min(dateTimeSet);
-        LocalDateTime max = Collections.max(dateTimeSet);
+        Byte min = Collections.min(byteSet);
+        Byte max = Collections.max(byteSet);
 
-        Utils.printOperationDuration(startTime, "пошук мiнiмальної i максимальної дати i часу в HashSet");
+        Utils.printOperationDuration(startTime, "пошук мiнiмального i максимального числа в HashSet");
 
         System.out.println("Мiнiмальне значення в HashSet: " + min);
         System.out.println("Максимальне значення в HashSet: " + max);
@@ -203,27 +200,27 @@ public class BasicDataOperationUsingSet {
      * Порiвнює елементи масиву та множини.
      */
     private void compareArrayAndSet() {
-        System.out.println("Кiлькiсть елементiв в масивi: " + dateTimeArray.length);
-        System.out.println("Кiлькiсть елементiв в HashSet: " + dateTimeSet.size());
+        System.out.println("кількість елементів в масиві: " + byteArray.length);
+        System.out.println("Кількість елементів в HashSet: " + byteSet.size());
 
         boolean allElementsMatch = true;
-        for (LocalDateTime dateTime : dateTimeArray) {
-            if (!dateTimeSet.contains(dateTime)) {
+        for (Byte dateTime : byteArray) {
+            if (!byteSet.contains(dateTime)) {
                 allElementsMatch = false;
                 break;
             }
         }
 
         if (allElementsMatch) {
-            System.out.println("Всi елементи масиву присутнi в HashSet.");
+            System.out.println("всі елементи масиву присутні в HashSet.");
         } else {
-            System.out.println("Не всi елементи масиву присутнi в HashSet.");
+            System.out.println("не всі елементи масиву присутні в HashSet.");
         }
     }
 }
 
 /**
- * Клас Utils мiститить допомiжнi методи для роботи з даними типу LocalDateTime.
+ * Клас Utils мiститить допомiжнi методи для роботи з даними типу Byte.
  */
 class Utils {
     /**
@@ -235,45 +232,44 @@ class Utils {
     static void printOperationDuration(long startTime, String operationName) {
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("\n>>>>>>>>>> Час виконання операцiї '" + operationName + "': " + duration + " наносекунд");
+        System.out.println("\n>>>>>>>>>> Час виконання операції'" + operationName + "': " + duration + " наносекунд");
     }
 
     /**
-     * Зчитує масив об'єктiв LocalDateTime з файлу.
+     * Зчитує масив об'єктiв Byte з файлу.
      * 
      * @param pathToFile Шлях до файлу з даними.
-     * @return Масив об'єктiв LocalDateTime.
+     * @return Масив об'єктiв Byte.
      */
-    static LocalDateTime[] readArrayFromFile(String pathToFile) {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        LocalDateTime[] tempArray = new LocalDateTime[1000];
+    static Byte[] readArrayFromFile(String pathToFile) {
+        Byte[] tempArray = new Byte[1000];
         int index = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
             String line;
             while ((line = br.readLine()) != null) {
-                LocalDateTime dateTime = LocalDateTime.parse(line, formatter);
+                Byte dateTime = Byte.parseByte(line);
                 tempArray[index++] = dateTime;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        LocalDateTime[] finalArray = new LocalDateTime[index];
+        Byte[] finalArray = new Byte[index];
         System.arraycopy(tempArray, 0, finalArray, 0, index);
 
         return finalArray;
     }
 
     /**
-     * Записує масив об'єктiв LocalDateTime у файл.
+     * Записує масив об'єктiв Byte у файл.
      * 
-     * @param dateTimeArray Масив об'єктiв LocalDateTime.
+     * @param dateTimeArray Масив об'єктiв Byte.
      * @param pathToFile Шлях до файлу для запису.
      */
-    static void writeArrayToFile(LocalDateTime[] dateTimeArray, String pathToFile) {
+    static void writeArrayToFile(Byte[] dateTimeArray, String pathToFile) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
-            for (LocalDateTime dateTime : dateTimeArray) {
+            for (Byte dateTime : dateTimeArray) {
                 writer.write(dateTime.toString());
                 writer.newLine();
             }
